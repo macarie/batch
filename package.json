@@ -1,0 +1,85 @@
+{
+  "name": "@macarie/batch",
+  "version": "1.0.0",
+  "description": "Batch multiple function-calls into one",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "compile:clean": "rimraf dist",
+    "compile:declaration": "tsc --emitdeclarationonly",
+    "compile:transpile": "esbuild --target=esnext --outdir=dist src/**.ts",
+    "compile:legacy": "esbuild --target=esnext --format=cjs --outdir=dist/cjs --out-extension:.js=.cjs src/**.ts",
+    "compile:library": "run-p -s compile:declaration compile:transpile compile:legacy",
+    "compile": "run-s -s compile:clean compile:library",
+    "lint:tsc": "tsc --noemit",
+    "lint:xo": "xo",
+    "lint": "run-p -s lint:*",
+    "test": "c8 uvu -r esm -r esbuild-register tests",
+    "coverage": "c8 report --reporter=text-lcov | codecov --pipe --disable=gcov"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/cjs/index.cjs",
+    "dist/index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macarie/batch.git"
+  },
+  "author": {
+    "name": "Raul Macarie",
+    "email": "raul@macarie.me",
+    "url": "https://macarie.me"
+  },
+  "bugs": {
+    "url": "https://github.com/macarie/batch/issues"
+  },
+  "homepage": "https://github.com/macarie/batch#readme",
+  "keywords": [
+    "batch",
+    "function",
+    "functions",
+    "group",
+    "limit",
+    "limited",
+    "queue",
+    "rate",
+    "task",
+    "throttle"
+  ],
+  "devDependencies": {
+    "c8": "^7.7.2",
+    "delay": "^5.0.0",
+    "esbuild": "^0.11.23",
+    "esbuild-register": "^2.5.0",
+    "esm": "^3.2.25",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.3.2",
+    "uvu": "^0.5.1",
+    "xo": "^0.39.1"
+  },
+  "xo": {
+    "prettier": true
+  },
+  "prettier": {
+    "semi": false,
+    "bracketSpacing": true,
+    "useTabs": false,
+    "endOfLine": "lf",
+    "trailingComma": "es5"
+  }
+}
