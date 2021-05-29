@@ -8,7 +8,7 @@ Batches multiple function-calls into one by creating a throttled function that i
 
 Useful for batching together multiple state changes, for example.
 
-_This module offers with full TypeScript support._
+_This module offers full TypeScript support._
 
 ## Install
 
@@ -91,7 +91,7 @@ batchedF("c", 3)
 
 ## Todo
 
-- [ ] Add a maximum number of function calls that, when reached, bypass the timeout.
+- [ ] Add a maximum number of function calls that, when reached, bypasses the timeout.
 - [ ] Implement `clear` to cancel the currently scheduled function call.
 - [ ] Implement `flush` to execute the currently scheduled function call.
 
