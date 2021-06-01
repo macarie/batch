@@ -8,11 +8,35 @@ interface Options {
 }
 
 /**
- * Batches multiple function-calls into one by creating a throttled function that only invokes `f` at most once per every `wait` milliseconds.
+ * Batches multiple function-calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
  * When the time comes, it invokes `f` with an array that contains the arguments of every function-call that did not run, grouped, as these are collected and batched.
  *
  * @param f The function you want to throttle.
  * @param interval Timespan for `limit` in milliseconds.
+ *
+ * @returns A throttled version of `f` that receives the arguments of every call made between executions.
+ *
+ * @example
+ * ```javascript
+ * import batch from "@macarie/batch"
+ *
+ * const createNewState = (parameters) => {
+ *   let state = {}
+ *
+ *   for (const [parameter] of parameters) {
+ *     state = {
+ *       ...state,
+ *       ...parameter,
+ *     }
+ *   }
+ *
+ *   console.log(state)
+ * }
+ * const setState = batch(createNewState, 5)
+ *
+ * for (let i = 0; i < 5; i += 1) {
+ *   setState({ [`index-${i}`]: Math.random() })
+ * }
  * ```
  */
 const batch = <T extends unknown[]>(
