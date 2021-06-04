@@ -4,7 +4,7 @@
 
 ![Test Status Badge](https://github.com/macarie/batch/workflows/test/badge.svg) [![Codecov Code Coverage Result](https://codecov.io/gh/macarie/batch/branch/main/graph/badge.svg?token=JL1FLLY4Y6)](https://codecov.io/gh/macarie/batch)
 
-Batches multiple function-calls into one by creating a throttled function that invokes the provided function at most once per every specified number of milliseconds.
+Batches multiple function-calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
 
 Useful for batching together multiple state changes, for example.
 
@@ -47,7 +47,7 @@ batchedF(3, "c")
 
 ### batch(f, interval?, options?)
 
-Creates a throttled function that only invokes `f` at most once per every `wait` milliseconds.
+Creates a throttled function that only invokes `f` at most once per every `interval` milliseconds.
 
 When the time comes, it invokes `f` with an array that contains the arguments of every function-call that did not run, grouped, as these are collected and batched.
 
@@ -56,15 +56,15 @@ When the time comes, it invokes `f` with an array that contains the arguments of
 Type: `function`<br>
 Required: `true`
 
-The function to throttle that should be invoked with batched arguments.
+The function that should receive batches of arguments.
 
-#### `wait`
+#### `interval`
 
 Type: `number`<br>
 Required: `false`<br>
 Default: `0`
 
-The number of milliseconds to throttle invocations to.
+Timespan for `limit` in milliseconds.
 
 #### `options`
 
@@ -81,7 +81,7 @@ Maximum number of function calls within an `interval`.
 
 ## More Examples
 
-This module offers full TypeScript support, so that the batched function has type hints.
+This module offers full TypeScript support so that the batched function has type hints.
 
 ```typescript
 import batch from "@macarie/batch"
@@ -104,7 +104,7 @@ batchedF("c", 3)
 
 ## Todo
 
-- [ ] Add a maximum number of function calls that, when reached, bypasses the timeout.
+- [x] Add a maximum number of function calls that, when reached, bypasses the timeout.
 - [ ] Implement `clear` to cancel the currently scheduled function call.
 - [ ] Implement `flush` to execute the currently scheduled function call.
 
