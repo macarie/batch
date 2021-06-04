@@ -58,10 +58,7 @@ const batch = <T extends unknown[]>(
 
   let timesCalled = 0
   let args: T[] = []
-  let timeout:
-    | ReturnType<typeof global.setTimeout>
-    | ReturnType<typeof window.setTimeout>
-    | undefined
+  let timeout: ReturnType<typeof setTimeout> | undefined
 
   return (...parameters: T): void => {
     timesCalled += 1
