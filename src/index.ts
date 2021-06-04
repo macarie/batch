@@ -11,7 +11,7 @@ interface Options {
  * Batches multiple function-calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
  * When the time comes, it invokes `f` with an array that contains the arguments of every function-call that did not run, grouped, as these are collected and batched.
  *
- * @param f The function you want to throttle.
+ * @param f The function that should receive batches of arguments.
  * @param interval Timespan for `limit` in milliseconds.
  *
  * @returns A throttled version of `f` that receives the arguments of every call made between executions.
