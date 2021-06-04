@@ -45,7 +45,7 @@ batchedF(3, "c")
 
 ## API
 
-### batch(f, wait?)
+### batch(f, interval?, options?)
 
 Creates a throttled function that only invokes `f` at most once per every `wait` milliseconds.
 
@@ -65,6 +65,19 @@ Required: `false`<br>
 Default: `0`
 
 The number of milliseconds to throttle invocations to.
+
+#### `options`
+
+Type: `object`<br>
+Required: `false`<br>
+
+##### `limit`
+
+Type: `number`<br>
+Required: `false`<br>
+Default: `Infinity`
+
+Maximum number of function calls within an `interval`.
 
 ## More Examples
 
