@@ -58,7 +58,10 @@ const batch = <T extends unknown[]>(
 
   let timesCalled = 0
   let args: T[] = []
-  let timeout: NodeJS.Timeout | undefined
+  let timeout:
+    | ReturnType<typeof global.setTimeout>
+    | ReturnType<typeof window.setTimeout>
+    | undefined
 
   return (...parameters: T): void => {
     timesCalled += 1
