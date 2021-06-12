@@ -1,10 +1,10 @@
 # [@macarie/batch](https://github.com/macarie/batch) [![Release Version](https://img.shields.io/npm/v/@macarie/batch?label=&color=0080FF)](https://www.npmjs.com/package/@macarie/batch)
 
-> Batch multiple function-calls into one
+> Batch multiple function calls into one
 
 ![Test Status Badge](https://github.com/macarie/batch/workflows/test/badge.svg) [![Codecov Code Coverage Result](https://codecov.io/gh/macarie/batch/branch/main/graph/badge.svg?token=JL1FLLY4Y6)](https://codecov.io/gh/macarie/batch)
 
-Batches multiple function-calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
+Batches multiple function calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
 
 Useful for batching together multiple state changes, for example.
 
@@ -110,6 +110,29 @@ batchedF(2, "b")
 batchedF("c", 3)
 ```
 
+Using the `limit` option.
+
+```javascript
+import batch from "@macarie/batch"
+
+const f = (parameters) => {
+  parameters.forEach((parameter) => console.log(parameter))
+}
+
+const batchedF = batch(f, 50, { limit: 1 })
+
+batchedF(1, "a")
+batchedF(2, "b")
+
+// It will immediately log:
+// => [1, 'a']
+// => [2, 'b']
+
+batchedF(3, "c")
+
+// After ~50ms it will log:
+// => [3, 'c']
+```
 
 Using `flush` and `clear`.
 
