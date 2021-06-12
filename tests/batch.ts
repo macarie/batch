@@ -116,6 +116,58 @@ test('`limit` should work when it is set to 0', async () => {
   assert.equal(argumentsReceived, [])
 })
 
+test('when `flush` is called, the function should run immediately', async () => {
+  let argumentsReceived: ArgumentsType[] = []
+
+  const testFunction = (args: ArgumentsType[]) => {
+    argumentsReceived = args
+  }
+
+  const batchedFunction = batch(testFunction, 50)
+
+  batchedFunction(1, 'a', true)
+  batchedFunction(2, 'b', false)
+  batchedFunction(3, 'c', true)
+
+  assert.equal(argumentsReceived, [])
+
+  batchedFunction.flush()
+
+  assert.equal(argumentsReceived, [
+    [1, 'a', true],
+    [2, 'b', false],
+    [3, 'c', true],
+  ])
+
+  argumentsReceived = []
+
+  await delay(75)
+  assert.equal(argumentsReceived, [])
+})
+
+test('when `clear` is called, the function should not run', async () => {
+  let argumentsReceived: ArgumentsType[] = []
+
+  const testFunction = (args: ArgumentsType[]) => {
+    argumentsReceived = args
+  }
+
+  const batchedFunction = batch(testFunction, 50)
+
+  batchedFunction(1, 'a', true)
+  batchedFunction(2, 'b', false)
+  batchedFunction(3, 'c', true)
+
+  assert.equal(argumentsReceived, [])
+
+  batchedFunction.clear()
+
+  assert.equal(argumentsReceived, [])
+
+  await delay(75)
+  assert.equal(argumentsReceived, [])
+})
+
 test('should throw if `f` is not a function', () => {
   assert.throws(
     () => batch({} as unknown as (parameters: unknown[][]) => void, 0),

@@ -1,14 +1,26 @@
 interface Options {
   /**
-		Maximum number of calls within an `interval`.
-
-    @default Number.POSITIVE_INFINITY
-		*/
+   * Maximum number of calls within an `interval`.
+   *
+   * @default Number.POSITIVE_INFINITY
+   */
   readonly limit?: number
 }
 
+interface BatchedFunction<T extends unknown[]> {
+  (...parameters: T): void
+  /**
+   * Run the function immediately, without waiting for `limit` or `interval`.
+   */
+  flush: () => void
+  /**
+   * Discard the current batch. The function won't run.
+   */
+  clear: () => void
+}
+
 /**
- * Batches multiple function-calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
+ * Batches multiple function calls into one by creating a [throttled](https://css-tricks.com/debouncing-throttling-explained-examples/) function.
  * When the time comes, it invokes `f` with an array that contains the arguments of every function-call that did not run, grouped, as these are collected and batched.
  *
  * @param f The function that should receive batches of arguments.
@@ -43,7 +55,7 @@ const batch = <T extends unknown[]>(
   f: (parameters: T[]) => void,
   interval = 0,
   { limit = Number.POSITIVE_INFINITY }: Options = {}
-): ((...parameters: T) => void) => {
+): BatchedFunction<T> => {
   if (typeof interval !== 'number' || interval < 0) {
     throw new TypeError('Expected the second argument to be a positive number')
   }
@@ -60,33 +72,43 @@ const batch = <T extends unknown[]>(
   let args: T[] = []
   let timeout: ReturnType<typeof setTimeout> | undefined
 
-  return (...parameters: T): void => {
+  const reset = () => {
+    timesCalled = 0
+    args = []
+
+    if (timeout !== undefined) {
+      clearTimeout(timeout)
+
+      timeout = undefined
+    }
+  }
+
+  const returnFunction = (...parameters: T): void => {
     timesCalled += 1
     args.push(parameters)
 
     if (timesCalled === 1) {
       timeout = setTimeout(() => {
-        f(args)
-
-        timesCalled = 0
-        args = []
-        timeout = undefined
+        returnFunction.flush()
       }, interval)
     }
 
     if (timesCalled > limit) {
-      f(args)
-
-      timesCalled = 0
-      args = []
-
-      if (timeout !== undefined) {
-        clearTimeout(timeout)
-
-        timeout = undefined
-      }
+      returnFunction.flush()
     }
   }
+
+  returnFunction.flush = () => {
+    f(args)
+
+    reset()
+  }
+
+  returnFunction.clear = () => {
+    reset()
+  }
+
+  return returnFunction
 }
 
 export default batch

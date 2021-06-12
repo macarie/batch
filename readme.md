@@ -79,6 +79,14 @@ Default: `Infinity`
 
 Maximum number of function calls within an `interval`.
 
+### batchedFunction.flush()
+
+Flush the current batch by running the function immediately, without waiting for `limit` or `interval`.
+
+### batchedFunction.clear()
+
+Discard the current batch. The function won't run.
+
 ## More Examples
 
 This module offers full TypeScript support so that the batched function has type hints.
@@ -102,11 +110,33 @@ batchedF(2, "b")
 batchedF("c", 3)
 ```
 
-## Todo
 
-- [x] Add a maximum number of function calls that, when reached, bypasses the timeout.
-- [ ] Implement `clear` to cancel the currently scheduled function call.
-- [ ] Implement `flush` to execute the currently scheduled function call.
+Using `flush` and `clear`.
+
+```javascript
+import batch from "@macarie/batch"
+
+const f = (parameters) => {
+  parameters.forEach((parameter) => console.log(parameter))
+}
+
+const batchedF = batch(f, 50)
+
+batchedF(1, "a")
+batchedF(2, "b")
+
+batchedF.flush()
+
+// It will immediately log:
+// => [1, 'a']
+// => [2, 'b']
+
+batchedF(3, "c")
+
+batchedF.clear()
+
+// Even after ~50ms it won't log anything
+```
 
 ## License
 
