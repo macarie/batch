@@ -7,7 +7,7 @@ interface Options {
   readonly limit?: number
 }
 
-interface BatchedFunction<T extends unknown[]> {
+export interface BatchedFunction<T extends unknown[]> {
   (...parameters: T): void
   /**
    * Run the function immediately, without waiting for `limit` or `interval`.
